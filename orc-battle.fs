@@ -15,7 +15,7 @@ variable monster-builders
   30 player-strength ! ;
 
 : game-loop ;
-: player-dead? false ;
+: player-dead? ( -- f ) player-health @ 0 <= ;
 : monsters-dead? true ;
 
 : orc-battle ( -- )
