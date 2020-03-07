@@ -14,10 +14,31 @@ variable monster-builders
   30 player-agility  !
   30 player-strength ! ;
 
-: game-loop ;
-
 : player-dead? ( -- f ) player-health @ 0 <= ;
 : monsters-dead? true ;
+
+: player-attacks-per-round ( -- n )
+  player-agility @ 15 / 1 + ;
+
+: show-player ;
+: show-monsters ;
+: player-attack ;
+
+: game-loop
+  recursive
+  player-dead? monsters-dead? or if
+    exit
+  then
+  show-player
+  player-attacks-per-round -1 do
+    monsters-dead? not if
+      show-monsters
+      player-attack
+    then
+  loop
+  ( TODO Make monsters attack. )
+  game-loop
+;
 
 : .player-dead
   player-dead? if
