@@ -20,7 +20,7 @@ variable monster-builders
 : player-attacks-per-round ( -- n )
   player-agility @
   15 /                          ( no need for truncating integer operations )
-  1 + ;
+  1+ ;
 
 : show-player
   cr
