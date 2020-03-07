@@ -15,16 +15,23 @@ variable monster-builders
   30 player-strength ! ;
 
 : game-loop ;
+
 : player-dead? ( -- f ) player-health @ 0 <= ;
 : monsters-dead? true ;
+
+: .player-dead
+  player-dead? if
+    cr ." You have been killed. Game over." cr
+  then ;
+
+: .monsters-dead
+  monsters-dead? if
+    cr ." Congratulations! You have vanquised all of your foes." cr
+  then ;
 
 : orc-battle ( -- )
   init-monsters
   init-player
   game-loop
-  player-dead? if
-    cr ." You have been killed. Game over." cr
-  then
-  monsters-dead? if
-    cr ." Congratulations! You have vanquised all of your foes." cr
-  then ;
+  .player-dead
+  .monsters-dead ;
