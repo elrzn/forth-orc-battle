@@ -49,7 +49,8 @@ variable monster-builders
       player-attack
     then
   loop
-  ( TODO Make monsters attack. )
+  ( TODO Make monsters attack. Basically need to loop through the array of
+    monsters, and if the monster is not dead, then make it attack the player. )
   game-loop
 ;
 
