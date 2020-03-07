@@ -18,7 +18,9 @@ variable monster-builders
 : monsters-dead? true ;
 
 : player-attacks-per-round ( -- n )
-  player-agility @ 15 / 1 + ;
+  player-agility @
+  15 /                          ( no need for truncating integer operations )
+  1 + ;
 
 : show-player
   cr
