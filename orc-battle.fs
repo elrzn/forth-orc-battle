@@ -7,15 +7,12 @@ variable monster-builders
 
 12 constant monster-num
 
-: init-monsters ;
-
 : init-player
   30 player-health   !
   30 player-agility  !
   30 player-strength ! ;
 
 : player-dead? ( -- f ) player-health @ 0 <= ;
-: monsters-dead? true ;
 
 : player-attacks-per-round ( -- n )
   player-agility @
@@ -34,8 +31,11 @@ variable monster-builders
   player-strength ?
   ." ." ;
 
-: show-monsters ;
 : player-attack ;
+
+: init-monsters ;
+: show-monsters ;
+: monsters-dead? true ;
 
 : game-loop
   recursive
