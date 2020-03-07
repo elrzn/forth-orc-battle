@@ -8,7 +8,12 @@ variable monster-builders
 12 constant monster-num
 
 : init-monsters ;
-: init-player ;
+
+: init-player
+  30 player-health   !
+  30 player-agility  !
+  30 player-strength ! ;
+
 : game-loop ;
 : player-dead? false ;
 : monsters-dead? true ;
