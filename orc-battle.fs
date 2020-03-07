@@ -20,7 +20,18 @@ variable monster-builders
 : player-attacks-per-round ( -- n )
   player-agility @ 15 / 1 + ;
 
-: show-player ;
+: show-player
+  cr
+  ." You are a valiant knight with a health of "
+  ( Note that ? or @ . is printing a space afterwards. Need to figure out how to
+    circunvent this. )
+  player-health ?
+  ." , an agility of "
+  player-agility ?
+  ." , and a strength of "
+  player-strength ?
+  ." ." ;
+
 : show-monsters ;
 : player-attack ;
 
