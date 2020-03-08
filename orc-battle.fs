@@ -39,6 +39,7 @@ variable monster-builders
 : init-monsters ;               \ nyi
 : show-monsters ;               \ nyi
 : monsters-dead? true ;         \ nyi
+: monsters-alive? monsters-dead? not ;
 
 : player-stab-attack
   pick-monster                   ( monster )
@@ -51,7 +52,7 @@ variable monster-builders
   cr ." Your double swing has a strength of " dup .
   tuck                          ( damage monster damage )
   monster-hit                   ( damage )
-  monsters-dead? not if
+  monsters-alive? if
     pick-monster swap           ( monster damage )
     monster-hit
   else
@@ -61,7 +62,7 @@ variable monster-builders
 : player-attack-other
   player-strength @ 3 / 1+      ( times )
   -1 do
-    monsters-dead? not if
+    monsters-alive? if
       random-monster 1 monster-hit
     then
   loop ;
@@ -81,7 +82,7 @@ variable monster-builders
   then
   show-player
   player-attacks-per-round -1 do
-    monsters-dead? not if
+    monsters-alive? if
       show-monsters
       player-attack
     then
