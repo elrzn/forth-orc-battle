@@ -33,10 +33,10 @@ variable monster-builders
 
 : monster-hit ( monster damage -- ) ;  \ nyi
 
-: pick-monster   ( -- monster ) ;  \ nyi
-: random-monster ( -- monster ) ;  \ nyi
+: pick-monster   ( -- monster ) ;  \ nyi 178
+: random-monster ( -- monster ) ;  \ nyi 177
 
-: init-monsters ;               \ nyi
+: init-monsters ;               \ nyi 178
 : show-monsters ;               \ nyi
 : monsters-dead? true ;         \ nyi
 : monsters-alive? monsters-dead? not ;
