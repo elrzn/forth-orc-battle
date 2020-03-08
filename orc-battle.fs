@@ -31,9 +31,10 @@ variable monster-builders
   player-strength ?
   ." ." ;
 
-: monster-hit ( monster damage -- ) ;
+: monster-hit ( monster damage -- ) ;  \ nyi
 
-: pick-monster ( -- monster ) ;
+: pick-monster   ( -- monster ) ;  \ nyi
+: random-monster ( -- monster ) ;  \ nyi
 
 : init-monsters ;               \ nyi
 : show-monsters ;               \ nyi
@@ -57,11 +58,20 @@ variable monster-builders
     drop
   then ;
 
+: player-attack-other
+  player-strength @ 3 / 1+      ( times )
+  -1 do
+    monsters-dead? not if
+      random-monster 1 monster-hit
+    then
+  loop ;
+
 : player-attack
   cr ." Attack style: [s]tab [d]ouble swing [r]oundhouse:"
   key case
-    115 of player-stab-attack endof
+    115 of player-stab-attack         endof
     100 of player-double-swing-attack endof
+           player-attack-other
   endcase ;
 
 : game-loop
