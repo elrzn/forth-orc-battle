@@ -104,8 +104,8 @@ end-struct monster%
 : player-attack
   cr ." Attack style: [s]tab [d]ouble swing [r]oundhouse:"
   key case
-    115 of player-stab-attack         endof
-    100 of player-double-swing-attack endof
+    's' of player-stab-attack         endof
+    'd' of player-double-swing-attack endof
            player-attack-other
   endcase ;
 
