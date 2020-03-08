@@ -64,9 +64,6 @@ variable monster-builders
     cr ." Congratulations! You have vanquised all of your foes." cr
   then ;
 
-: orc-battle ( -- )
-  init-monsters
-  init-player
-  game-loop
-  .player-dead
-  .monsters-dead ;
+: end-game   .player-dead .monsters-dead  ;
+: init-game  init-monsters init-player    ;
+: orc-battle init-game game-loop end-game ;
