@@ -51,17 +51,21 @@ end-struct monster%
   player-strength ?
   ." ." ;
 
-: monster-hit ( monster damage -- )
+: monster-take-damage ( monster damage -- )
   tuck
   over monster-health @
   swap -
-  swap monster-health !
+  swap monster-health ! ;
+
+: monster-hit ( monster damage -- )
+  2dup monster-take-damage
   cr
   monster-dead? if
-    ." You killed the TODO!"
     drop
+    ." You killed the " .monster-name ." !"
   else
-    ." You hit the TODO, knocking off " . ." health points!"
+    swap
+    ." You hit the " .monster-name ." , knocking off " . ." health points!"
   then ;
 
 : pick-monster   ( -- monster ) ;  \ nyi 178
