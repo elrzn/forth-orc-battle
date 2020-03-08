@@ -14,16 +14,15 @@ struct
   dcell% field monster-name
 end-struct monster%
 
+: monster-name! ( c-addr u monster -- ) monster-name 2! ;
+: monster-name@ ( monster -- c-addr u ) monster-name 2@ ;
+: .monster-name ( monster -- )          monster-name@ type ;
+: .monster      ( monster -- )          ." A fierce " .monster-name ;
+
 : make-monster ( -- monster )
   monster% %allot
   10 randval over monster-health !
-  dup s" Monster" rot monster-name 2! ;
-
-: get-monster-name ( monster -- health )
-  monster-name 2@ ;
-
-: .monster-name ( monster -- )
-  get-monster-name type ;
+  dup s" Monster" rot monster-name! ;
 
 : init-player
   30 player-health   !
