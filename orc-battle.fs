@@ -31,13 +31,17 @@ variable monster-builders
   player-strength ?
   ." ." ;
 
-: pick-monster ;                \ nyi
+: monster-hit ( monster damage -- ) ;
+
+: pick-monster ( -- monster ) ;
 
 : player-attack
   cr ." Attack style: [s]tab [d]ouble swing [r]oundhouse:"
   key case
     115 of                      \ Stab
-      pick-monster
+      pick-monster                   ( monster )
+      player-strength @ 2/ choose 2+ ( monster damage )
+      monster-hit
     endof
     100 of                      \ Double Swing
       pick-monster
