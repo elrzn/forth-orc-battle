@@ -9,6 +9,14 @@ variable monster-builders
 
 : randval ( n -- n' ) choose 1+ ;
 
+struct
+  cell% field monster-health
+end-struct monster%
+
+: make-monster ( -- monster )
+  monster% %allot
+  10 randval over monster-health ! ;
+
 : init-player
   30 player-health   !
   30 player-agility  !
