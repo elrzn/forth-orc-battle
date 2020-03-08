@@ -41,7 +41,10 @@ end-struct monster%
   player-strength ?
   ." ." ;
 
-: monster-hit ( monster damage -- ) ;  \ nyi
+: monster-hit ( monster damage -- )
+  over monster-health @
+  swap -
+  swap monster-health ! ;
 
 : pick-monster   ( -- monster ) ;  \ nyi 178
 : random-monster ( -- monster ) ;  \ nyi 177
