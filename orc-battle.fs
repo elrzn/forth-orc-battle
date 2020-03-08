@@ -39,27 +39,30 @@ variable monster-builders
 : show-monsters ;               \ nyi
 : monsters-dead? true ;         \ nyi
 
+: player-stab-attack
+  pick-monster                   ( monster )
+  player-strength @ 2/ choose 2+ ( monster damage )
+  monster-hit ;
+
+: player-double-swing-attack
+  pick-monster                  ( monster )
+  player-strength @ 6 / choose  ( monster damage )
+  cr ." Your double swing has a strength of " dup .
+  tuck                          ( damage monster damage )
+  monster-hit                   ( damage )
+  monsters-dead? not if
+    pick-monster swap           ( monster damage )
+    monster-hit
+  else
+    drop
+  then ;
+
 : player-attack
   cr ." Attack style: [s]tab [d]ouble swing [r]oundhouse:"
   key case
-    115 of                      \ Stab
-      pick-monster              ( monster )
-      player-strength @ 2/ choose 2+ ( monster damage )
-      monster-hit
-    endof
-    100 of                      \ Double Swing
-      pick-monster              ( monster )
-      player-strength @ 6 / choose ( monster damage )
-      cr ." Your double swing has a strength of " dup .
-      tuck                      ( damage monster damage )
-      monster-hit               ( damage )
-      monsters-dead? not if
-        pick-monster swap       ( monster damage )
-        monster-hit
-      then
-    endof
-  endcase
-;
+    115 of player-stab-attack endof
+    100 of player-double-swing-attack endof
+  endcase ;
 
 : game-loop
   recursive
