@@ -16,14 +16,14 @@ variable monster-builders
 
 : player-attacks-per-round ( -- n )
   player-agility @
-  15 /                          ( no need for truncating integer operations )
+  15 /                          \ no need for truncating integer operations
   1+ ;
 
 : show-player
   cr
   ." You are a valiant knight with a health of "
-  ( Note that ? or @ . is printing a space afterwards. Need to figure out how to
-    circunvent this. )
+  \ Note that ? or @ . is printing a space afterwards. Need to figure out how to
+  \ circunvent this.
   player-health ?
   ." , an agility of "
   player-agility ?
@@ -31,23 +31,23 @@ variable monster-builders
   player-strength ?
   ." ." ;
 
-: pick-monster ;                ( nyi )
+: pick-monster ;                \ nyi
 
 : player-attack
   cr ." Attack style: [s]tab [d]ouble swing [r]oundhouse:"
   key case
-    115 of                      ( Stab )
+    115 of                      \ Stab
       pick-monster
     endof
-    100 of                      ( Double Swing )
+    100 of                      \ Double Swing
       pick-monster
     endof
   endcase
 ;
 
-: init-monsters ;               ( nyi )
-: show-monsters ;               ( nyi )
-: monsters-dead? true ;         ( nyi )
+: init-monsters ;               \ nyi
+: show-monsters ;               \ nyi
+: monsters-dead? true ;         \ nyi
 
 : game-loop
   recursive
@@ -61,8 +61,8 @@ variable monster-builders
       player-attack
     then
   loop
-  ( TODO Make monsters attack. Basically need to loop through the array of
-    monsters, and if the monster is not dead, then make it attack the player. )
+  \ TODO Make monsters attack. Basically need to loop through the array of
+  \ monsters, and if the monster is not dead, then make it attack the player.
   game-loop ;
 
 : .player-dead
