@@ -7,6 +7,8 @@ variable monster-builders
 
 12 constant monster-num
 
+: randval ( n -- n' ) choose 1+ ;
+
 : init-player
   30 player-health   !
   30 player-agility  !
@@ -42,13 +44,13 @@ variable monster-builders
 : monsters-alive? monsters-dead? not ;
 
 : player-stab-attack
-  pick-monster                   ( monster )
-  player-strength @ 2/ choose 2+ ( monster damage )
+  pick-monster                    ( monster )
+  player-strength @ 2/ randval 2+ ( monster damage )
   monster-hit ;
 
 : player-double-swing-attack
   pick-monster                  ( monster )
-  player-strength @ 6 / choose  ( monster damage )
+  player-strength @ 6 / randval ( monster damage )
   cr ." Your double swing has a strength of " dup .
   tuck                          ( damage monster damage )
   monster-hit                   ( damage )
