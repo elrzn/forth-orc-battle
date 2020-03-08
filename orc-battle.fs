@@ -31,11 +31,23 @@ variable monster-builders
   player-strength ?
   ." ." ;
 
-: player-attack ;
+: pick-monster ;                ( nyi )
 
-: init-monsters ;
-: show-monsters ;
-: monsters-dead? true ;
+: player-attack
+  cr ." Attack style: [s]tab [d]ouble swing [r]oundhouse:"
+  key case
+    115 of                      ( Stab )
+      pick-monster
+    endof
+    100 of                      ( Double Swing )
+      pick-monster
+    endof
+  endcase
+;
+
+: init-monsters ;               ( nyi )
+: show-monsters ;               ( nyi )
+: monsters-dead? true ;         ( nyi )
 
 : game-loop
   recursive
