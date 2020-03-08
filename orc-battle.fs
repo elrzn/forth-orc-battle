@@ -22,7 +22,9 @@ end-struct monster%
   30 player-agility  !
   30 player-strength ! ;
 
-: player-dead? ( -- f ) player-health @ 0 <= ;
+: player-dead? ( -- f ) player-health @ 0<= ;
+
+: monster-dead? ( monster -- f ) monster-health @ 0<= ;
 
 : player-attacks-per-round ( -- n )
   player-agility @
@@ -42,9 +44,17 @@ end-struct monster%
   ." ." ;
 
 : monster-hit ( monster damage -- )
+  tuck
   over monster-health @
   swap -
-  swap monster-health ! ;
+  swap monster-health !
+  cr
+  monster-dead? if
+    ." You killed the TODO!"
+    drop
+  else
+    ." You hit the TODO, knocking off " . ." health points!"
+  then ;
 
 : pick-monster   ( -- monster ) ;  \ nyi 178
 : random-monster ( -- monster ) ;  \ nyi 177
