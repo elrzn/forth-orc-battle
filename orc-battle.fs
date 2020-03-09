@@ -10,29 +10,40 @@ variable monsters
 
 struct
   cell%  field monster-health
+  \ Keep an address of the word that will be used to display the struct. The
+  \ idea is that each constructor shall set its own display function. This can
+  \ be called later on with monster-show.
+  cell%  field monster-show-addr
   dcell% field monster-name
 end-struct monster%
 
 : monster-name!          ( c-addr u addr -- ) monster-name 2! ;
 : monster-name@          ( addr -- c-addr u ) monster-name 2@ ;
-: monster-default-health ( addr -- )          10 randval swap monster-health ! ;
-: monster-default-name   ( addr -- )          s" Monster" rot monster-name! ;
+: monster-show           ( addr -- )          dup monster-show-addr @ execute ;
 : .monster-name          ( addr -- )          monster-name@ type ;
 : .monster               ( addr -- )          ." A fierce " .monster-name ;
+: monster-default-health ( addr -- )          10 randval swap monster-health ! ;
+: monster-default-name   ( addr -- )          s" Monster" rot monster-name! ;
+: monster-default-show   ( addr -- )          ['] .monster swap monster-show-addr ! ;
 
 : make-monster ( -- monster )
   monster% %allot
   dup monster-default-health
-  dup monster-default-name ;
+  dup monster-default-name
+  dup monster-default-show ;
 
 monster%
   cell% field wicked-orc-club-level
 end-struct wicked-orc%
 
-: make-wicked-orc
+: .wicked-orc ( addr -- )
+  ." A wicked orc with a level " wicked-orc-club-level ? ." club" ;
+
+: make-wicked-orc ( -- addr )
   wicked-orc% %allot
   dup monster-default-health
   dup s" Wicked Orc" rot monster-name!
+  dup ['] .wicked-orc swap monster-show-addr !
   8 randval over wicked-orc-club-level ! ;
 
 \ Keep track of builders to aid random creation of monsters.
