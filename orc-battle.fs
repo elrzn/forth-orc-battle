@@ -14,15 +14,27 @@ struct
   dcell% field monster-name
 end-struct monster%
 
-: monster-name! ( c-addr u monster -- ) monster-name 2! ;
-: monster-name@ ( monster -- c-addr u ) monster-name 2@ ;
-: .monster-name ( monster -- )          monster-name@ type ;
-: .monster      ( monster -- )          ." A fierce " .monster-name ;
+: monster-name!          ( c-addr u addr -- ) monster-name 2! ;
+: monster-name@          ( addr -- c-addr u ) monster-name 2@ ;
+: monster-default-health ( addr -- )          10 randval swap monster-health ! ;
+: monster-default-name   ( addr -- )          s" Monster" rot monster-name! ;
+: .monster-name          ( addr -- )          monster-name@ type ;
+: .monster               ( addr -- )          ." A fierce " .monster-name ;
 
 : make-monster ( -- monster )
   monster% %allot
-  10 randval over monster-health !
-  dup s" Monster" rot monster-name! ;
+  dup monster-default-health
+  dup monster-default-name ;
+
+monster%
+  cell% field wicked-orc-club-level
+end-struct wicked-orc%
+
+: make-wicked-orc
+  wicked-orc% %allot
+  dup monster-default-health
+  dup s" Wicked Orc" rot monster-name!
+  8 randval over wicked-orc-club-level ! ;
 
 : init-player
   30 player-health   !
