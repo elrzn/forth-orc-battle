@@ -3,7 +3,6 @@ variable player-agility
 variable player-strength
 
 variable monsters
-variable monster-builders
 
 12 constant monster-num
 
@@ -35,6 +34,9 @@ end-struct wicked-orc%
   dup monster-default-health
   dup s" Wicked Orc" rot monster-name!
   8 randval over wicked-orc-club-level ! ;
+
+\ Keep track of builders to aid random creation of monsters.
+create monster-builders ' make-wicked-orc ,
 
 : init-player
   30 player-health   !
