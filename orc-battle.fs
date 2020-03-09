@@ -52,7 +52,7 @@ create monster-builders ' make-wicked-orc ,
   15 /                          \ no need for truncating integer operations
   1+ ;
 
-: show-player
+: .player
   cr
   ." You are a valiant knight with a health of "
   \ Note that ? or @ . is printing a space afterwards. Need to figure out how to
@@ -128,7 +128,7 @@ create monster-builders ' make-wicked-orc ,
   player-dead? monsters-dead? or if
     exit
   then
-  show-player
+  .player
   player-attacks-per-round -1 do
     monsters-alive? if
       show-monsters
