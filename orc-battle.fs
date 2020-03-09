@@ -26,7 +26,7 @@ end-struct monster%
 : monster-default-name   ( addr -- )          s" Monster" rot monster-name! ;
 : monster-default-show   ( addr -- )          ['] .monster swap monster-show-addr ! ;
 
-: make-monster ( -- monster )
+: make-monster ( -- addr )
   monster% %allot
   dup monster-default-health
   dup monster-default-name
@@ -56,7 +56,7 @@ create monster-builders ' make-wicked-orc ,
 
 : player-dead? ( -- f ) player-health @ 0<= ;
 
-: monster-dead? ( monster -- f ) monster-health @ 0<= ;
+: monster-dead? ( addr -- f ) monster-health @ 0<= ;
 
 : player-attacks-per-round ( -- n )
   player-agility @
@@ -75,13 +75,13 @@ create monster-builders ' make-wicked-orc ,
   player-strength ?
   ." ." ;
 
-: monster-take-damage ( monster damage -- )
+: monster-take-damage ( addr n -- )
   tuck
   over monster-health @
   swap -
   swap monster-health ! ;
 
-: monster-hit ( monster damage -- )
+: monster-hit ( addr n -- )
   2dup monster-take-damage
   cr
   monster-dead? if
@@ -92,8 +92,8 @@ create monster-builders ' make-wicked-orc ,
     ." You hit the " .monster-name ." , knocking off " . ." health points!"
   then ;
 
-: pick-monster   ( -- monster ) ;  \ nyi 178
-: random-monster ( -- monster ) ;  \ nyi 177
+: pick-monster   ( -- addr ) ;  \ nyi 178
+: random-monster ( -- addr ) ;  \ nyi 177
 
 : init-monsters ;               \ nyi 178
 : show-monsters ;               \ nyi
@@ -101,26 +101,25 @@ create monster-builders ' make-wicked-orc ,
 : monsters-alive? monsters-dead? not ;
 
 : player-stab-attack
-  pick-monster                    ( monster )
-  player-strength @ 2/ randval 2+ ( monster damage )
+  pick-monster                    ( addr )
+  player-strength @ 2/ randval 2+ ( addr n )
   monster-hit ;
 
 : player-double-swing-attack
-  pick-monster                  ( monster )
-  player-strength @ 6 / randval ( monster damage )
+  pick-monster                  ( addr )
+  player-strength @ 6 / randval ( addr n )
   cr ." Your double swing has a strength of " dup .
-  tuck                          ( damage monster damage )
-  monster-hit                   ( damage )
+  tuck                          ( n addr n )
+  monster-hit                   ( n )
   monsters-alive? if
-    pick-monster swap           ( monster damage )
+    pick-monster swap           ( addr n )
     monster-hit
   else
     drop
   then ;
 
 : player-attack-other
-  player-strength @ 3 / 1+      ( times )
-  -1 do
+  player-strength @ 3 / 1+ -1 do
     monsters-alive? if
       random-monster 1 monster-hit
     then
