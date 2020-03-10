@@ -57,8 +57,19 @@ end-struct wicked-orc%
   dup ['] wicked-orc-attack swap monster-attack-addr !
   8 randval over wicked-orc-club-level ! ;
 
+monster% end-struct hydra%
+
+: .hydra ( addr -- ) ." A malicious hydra with " monster-health ? ." heads." ;
+
+: make-hydra ( -- addr )
+  hydra% %allot
+  dup monster-default-health
+  dup s" Hydra" rot monster-name!
+  dup ['] .hydra swap monster-show-addr ! ;
+
 \ Keep track of builders to aid random creation of monsters.
 create monster-builders ' make-wicked-orc ,
+                        ' make-hydra      ,
 
 : init-player
   30 player-health   !
