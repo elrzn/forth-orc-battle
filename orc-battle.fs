@@ -2,6 +2,8 @@ variable player-health
 variable player-agility
 variable player-strength
 
+: player-decrease-health ( n -- ) player-health @ swap - player-health ! ;
+
 variable monsters
 
 12 constant monster-num
@@ -14,12 +16,14 @@ struct
   \ idea is that each constructor shall set its own display function. This can
   \ be called later on with monster-show.
   cell%  field monster-show-addr
+  cell%  field monster-attack-addr
   dcell% field monster-name
 end-struct monster%
 
 : monster-name!          ( c-addr u addr -- ) monster-name 2! ;
 : monster-name@          ( addr -- c-addr u ) monster-name 2@ ;
 : monster-show           ( addr -- )          dup monster-show-addr @ execute ;
+: monster-attack         ( addr -- )          dup monster-attack-addr @ execute ;
 : .monster-name          ( addr -- )          monster-name@ type ;
 : .monster               ( addr -- )          ." A fierce " .monster-name ;
 : monster-default-health ( addr -- )          10 randval swap monster-health ! ;
@@ -39,11 +43,18 @@ end-struct wicked-orc%
 : .wicked-orc ( addr -- )
   ." A wicked orc with a level " wicked-orc-club-level ? ." club" ;
 
+: wicked-orc-attack ( addr -- )
+  wicked-orc-club-level @ randval
+  ." And orc swings his club at you and knocks off"
+  dup . ." of your health points"
+  player-decrease-health ;
+
 : make-wicked-orc ( -- addr )
   wicked-orc% %allot
   dup monster-default-health
   dup s" Wicked Orc" rot monster-name!
   dup ['] .wicked-orc swap monster-show-addr !
+  dup ['] wicked-orc-attack swap monster-attack-addr !
   8 randval over wicked-orc-club-level ! ;
 
 \ Keep track of builders to aid random creation of monsters.
