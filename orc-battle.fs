@@ -61,11 +61,20 @@ monster% end-struct hydra%
 
 : .hydra ( addr -- ) ." A malicious hydra with " monster-health ? ." heads." ;
 
+: hydra-increase-health ( addr -- ) monster-health @ 1 + swap monster-health ! ;
+
+: hydra-attack ( addr -- )
+  dup monster-health @ 1 - randval
+  ." A hydra attacks you with " dup . ." of its heads! It also grows back one more head!"
+  swap dup hydra-increase-health
+  player-decrease-health ;
+
 : make-hydra ( -- addr )
   hydra% %allot
   dup monster-default-health
   dup s" Hydra" rot monster-name!
-  dup ['] .hydra swap monster-show-addr ! ;
+  dup ['] .hydra swap monster-show-addr !
+  dup ['] hydra-attack swap monster-attack-addr ! ;
 
 \ Keep track of builders to aid random creation of monsters.
 create monster-builders ' make-wicked-orc ,
