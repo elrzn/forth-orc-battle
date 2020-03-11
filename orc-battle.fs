@@ -73,7 +73,7 @@ end-struct wicked-orc%
   dup monster-default-health
   dup monster-default-hit
   dup s" Wicked Orc" rot monster-name!
-  dup ['] .wicked-orc swap monster-show-addr !
+  dup ['] .wicked-orc       swap monster-show-addr   !
   dup ['] wicked-orc-attack swap monster-attack-addr !
   8 randval over wicked-orc-club-level ! ;
 
@@ -102,7 +102,7 @@ monster% end-struct hydra%
   hydra% %allot
   dup monster-default-health
   dup s" Hydra" rot monster-name!
-  dup ['] .hydra swap monster-show-addr !
+  dup ['] .hydra       swap monster-show-addr   !
   dup ['] hydra-attack swap monster-attack-addr ! ;
 
 monster%
@@ -126,7 +126,7 @@ end-struct slime-mold%
   dup monster-default-hit
   5 randval over slime-mold-sliminess !
   dup s" Slime mold" rot monster-name!
-  dup ['] .slime-mold swap monster-show-addr !
+  dup ['] .slime-mold       swap monster-show-addr   !
   dup ['] slime-mold-attack swap monster-attack-addr ! ;
 
 \ Keep track of builders to aid random creation of monsters.
