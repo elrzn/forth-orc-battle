@@ -101,14 +101,38 @@ monster% end-struct hydra%
 : make-hydra ( -- addr )
   hydra% %allot
   dup monster-default-health
-  dup monster-default-hit
   dup s" Hydra" rot monster-name!
   dup ['] .hydra swap monster-show-addr !
   dup ['] hydra-attack swap monster-attack-addr ! ;
 
+monster%
+  cell% field slime-mold-sliminess
+end-struct slime-mold%
+
+: .slime-mold ( addr -- )
+  ." A slime mold with a sliminess of " slime-mold-sliminess ? ;
+
+: slime-mold-attack ( addr -- )
+  slime-mold-sliminess @ randval
+  ." A slime mold wraps around your legs and decreases your agility by " dup . ." !"
+  2 choose 0= if
+    ." It also squirts in your face, taking away a health point!"
+    player-decrease-health
+  then ;
+
+: make-slime-mold ( -- addr )
+  slime-mold% %allot
+  dup monster-default-health
+  dup monster-default-hit
+  5 randval over slime-mold-sliminess !
+  dup s" Slime mold" rot monster-name!
+  dup ['] .slime-mold swap monster-show-addr !
+  dup ['] slime-mold-attack swap monster-attack-addr ! ;
+
 \ Keep track of builders to aid random creation of monsters.
 create monster-builders ' make-wicked-orc ,
                         ' make-hydra      ,
+                        ' make-slime-mold ,
 
 : init-player
   30 player-health   !
