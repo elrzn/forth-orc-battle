@@ -17,24 +17,43 @@ struct
   \ be called later on with monster-show.
   cell%  field monster-show-addr
   cell%  field monster-attack-addr
+  cell%  field monster-hit-addr
   dcell% field monster-name
 end-struct monster%
 
-: monster-name!          ( c-addr u addr -- ) monster-name 2! ;
-: monster-name@          ( addr -- c-addr u ) monster-name 2@ ;
-: monster-show           ( addr -- )          dup monster-show-addr @ execute ;
-: monster-attack         ( addr -- )          dup monster-attack-addr @ execute ;
-: .monster-name          ( addr -- )          monster-name@ type ;
-: .monster               ( addr -- )          ." A fierce " .monster-name ;
-: monster-default-health ( addr -- )          10 randval swap monster-health ! ;
-: monster-default-name   ( addr -- )          s" Monster" rot monster-name! ;
-: monster-default-show   ( addr -- )          ['] .monster swap monster-show-addr ! ;
+: monster-name! ( c-addr u addr -- ) monster-name 2! ;
+: monster-name@ ( addr -- c-addr u ) monster-name 2@ ;
+: monster-dead? ( addr -- f )        monster-health @ 0<= ;
+: .monster-name ( addr -- )          monster-name@ type ;
+
+: monster-take-damage ( addr n -- )
+  over monster-health @
+  swap -
+  swap monster-health ! ;
+
+: (monster-hit) ( addr n -- )
+  2dup monster-take-damage
+  over monster-dead? cr if
+    drop ." You killed the " .monster-name ." !"
+  else
+    swap ." You hit the " .monster-name ." , knocking off " . ." health points!"
+  then ;
+
+: monster-show           ( addr -- )   dup  monster-show-addr   @ execute ;
+: monster-attack         ( addr -- )   dup  monster-attack-addr @ execute ;
+: monster-hit            ( addr n -- ) over monster-hit-addr    @ execute ;
+: .monster               ( addr -- )   ." A fierce " .monster-name ;
+: monster-default-health ( addr -- )   10 randval swap monster-health ! ;
+: monster-default-name   ( addr -- )   s" Monster" rot monster-name! ;
+: monster-default-show   ( addr -- )   ['] .monster swap monster-show-addr ! ;
+: monster-default-hit    ( addr -- )   ['] (monster-hit) swap monster-hit-addr ! ;
 
 : make-monster ( -- addr )
   monster% %allot
   dup monster-default-health
   dup monster-default-name
-  dup monster-default-show ;
+  dup monster-default-show
+  dup monster-default-hit ;
 
 monster%
   cell% field wicked-orc-club-level
@@ -45,13 +64,14 @@ end-struct wicked-orc%
 
 : wicked-orc-attack ( addr -- )
   wicked-orc-club-level @ randval
-  ." And orc swings his club at you and knocks off"
+  ." And orc swings his club at you and knocks off "
   dup . ." of your health points"
   player-decrease-health ;
 
 : make-wicked-orc ( -- addr )
   wicked-orc% %allot
   dup monster-default-health
+  dup monster-default-hit
   dup s" Wicked Orc" rot monster-name!
   dup ['] .wicked-orc swap monster-show-addr !
   dup ['] wicked-orc-attack swap monster-attack-addr !
@@ -72,6 +92,7 @@ monster% end-struct hydra%
 : make-hydra ( -- addr )
   hydra% %allot
   dup monster-default-health
+  dup monster-default-hit
   dup s" Hydra" rot monster-name!
   dup ['] .hydra swap monster-show-addr !
   dup ['] hydra-attack swap monster-attack-addr ! ;
@@ -86,8 +107,6 @@ create monster-builders ' make-wicked-orc ,
   30 player-strength ! ;
 
 : player-dead? ( -- f ) player-health @ 0<= ;
-
-: monster-dead? ( addr -- f ) monster-health @ 0<= ;
 
 : player-attacks-per-round ( -- n )
   player-agility @
@@ -105,23 +124,6 @@ create monster-builders ' make-wicked-orc ,
   ." , and a strength of "
   player-strength ?
   ." ." ;
-
-: monster-take-damage ( addr n -- )
-  tuck
-  over monster-health @
-  swap -
-  swap monster-health ! ;
-
-: monster-hit ( addr n -- )
-  2dup monster-take-damage
-  cr
-  monster-dead? if
-    drop
-    ." You killed the " .monster-name ." !"
-  else
-    swap
-    ." You hit the " .monster-name ." , knocking off " . ." health points!"
-  then ;
 
 : pick-monster   ( -- addr ) ;  \ nyi 178
 : random-monster ( -- addr ) ;  \ nyi 177
