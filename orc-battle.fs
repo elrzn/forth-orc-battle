@@ -89,6 +89,15 @@ monster% end-struct hydra%
   swap dup hydra-increase-health
   player-decrease-health ;
 
+: hydra-hit ( addr n -- )
+  tuck monster-take-damage
+  over monster-dead? cr if
+    drop
+    ." The corpse of the fully decapitated and decapacitated hydra falls to the floor!"
+  else
+    ." You lop off " . ." of the hydra's heads!"
+  then ;
+
 : make-hydra ( -- addr )
   hydra% %allot
   dup monster-default-health
