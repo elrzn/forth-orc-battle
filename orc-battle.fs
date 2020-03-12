@@ -2,7 +2,10 @@ variable player-health
 variable player-agility
 variable player-strength
 
-: player-decrease-health ( n -- ) player-health @ swap - player-health ! ;
+: (player-decrease)        ( n addr -- ) dup @ rot - swap ! ;
+: player-decrease-health   ( n -- )      player-health  (player-decrease) ;
+: player-decrease-agility  ( n -- )      player-agility (player-decrease) ;
+: player-decrease-strength ( n -- )      player-health  (player-decrease) ;
 
 variable monsters
 
@@ -125,10 +128,36 @@ end-struct slime-mold%
   dup ['] .slime-mold       swap monster-show-addr   !
   dup ['] slime-mold-attack swap monster-attack-addr ! ;
 
+monster% end-struct brigand%
+
+: brigand-attack ( addr -- )
+  drop           \ do nothing, but keep monster-attack interface consistent
+  player-health player-agility player-strength max max ( n )
+  case
+    player-health of
+      ." A brigand hits you with his slingshot, taking off 2 health points!"
+      2 player-decrease-health
+    endof
+    player-agility of
+      ." A brigand catches your leg with his whip, taking off 2 agility points!"
+      2 player-decrease-agility
+    endof
+    player-strength of
+      ." A brigand cuts your arm with his whip, taking off 2 strength points!"
+      2 player-decrease-strength
+    endof
+  endcase ;
+
+: make-brigand ( -- addr )
+  brigand% %allot monster-make-defaults
+  dup s" Brigand" rot monster-name!
+  dup ['] brigand-attack swap monster-attack-addr ! ;
+
 \ Keep track of builders to aid random creation of monsters.
 create monster-builders ' make-wicked-orc ,
                         ' make-hydra      ,
                         ' make-slime-mold ,
+                        ' make-brigand    ,
 
 : init-player
   30 player-health   !
