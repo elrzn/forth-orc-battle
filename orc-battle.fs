@@ -7,9 +7,9 @@ variable player-strength
 : player-decrease-agility  ( n -- )      player-agility (player-decrease) ;
 : player-decrease-strength ( n -- )      player-health  (player-decrease) ;
 
-variable monsters
-
 12 constant monster-num
+
+create monsters monster-num cells allot
 
 : randval ( n -- n' ) choose 1+ ;
 
@@ -184,9 +184,21 @@ create monster-builders ' make-wicked-orc ,
   ." ." ;
 
 : pick-monster   ( -- addr ) ;  \ nyi 178
-: random-monster ( -- addr ) ;  \ nyi 177
 
-: init-monsters ;               \ nyi 178
+: random-monster ( -- addr )
+  recursive
+  monsters monster-num choose cells + @
+  dup monster-dead? if
+    drop random-monster
+  then ;
+
+: make-random-monster ( -- addr ) monster-builders 4 choose cells + @ execute ;
+
+: init-monsters
+  monster-num 0 do
+    make-random-monster monsters i cells + !
+  loop ;
+
 : show-monsters ;               \ nyi
 : monsters-dead? true ;         \ nyi
 : monsters-alive? monsters-dead? not ;
