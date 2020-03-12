@@ -48,12 +48,13 @@ end-struct monster%
 : monster-default-show   ( addr -- )   ['] .monster swap monster-show-addr ! ;
 : monster-default-hit    ( addr -- )   ['] (monster-hit) swap monster-hit-addr ! ;
 
-: make-monster ( -- addr )
-  monster% %allot
+: make-monster-defaults ( addr -- addr )
   dup monster-default-health
   dup monster-default-name
   dup monster-default-show
   dup monster-default-hit ;
+
+: make-monster ( -- addr ) monster% %allot make-monster-defaults ;
 
 monster%
   cell% field wicked-orc-club-level
@@ -69,9 +70,7 @@ end-struct wicked-orc%
   player-decrease-health ;
 
 : make-wicked-orc ( -- addr )
-  wicked-orc% %allot
-  dup monster-default-health
-  dup monster-default-hit
+  wicked-orc% %allot make-monster-defaults
   dup s" Wicked Orc" rot monster-name!
   dup ['] .wicked-orc       swap monster-show-addr   !
   dup ['] wicked-orc-attack swap monster-attack-addr !
@@ -99,8 +98,7 @@ monster% end-struct hydra%
   then ;
 
 : make-hydra ( -- addr )
-  hydra% %allot
-  dup monster-default-health
+  hydra% %allot make-monster-defaults
   dup s" Hydra" rot monster-name!
   dup ['] .hydra       swap monster-show-addr   !
   dup ['] hydra-attack swap monster-attack-addr ! ;
@@ -121,9 +119,7 @@ end-struct slime-mold%
   then ;
 
 : make-slime-mold ( -- addr )
-  slime-mold% %allot
-  dup monster-default-health
-  dup monster-default-hit
+  slime-mold% %allot monster-make-defaults
   5 randval over slime-mold-sliminess !
   dup s" Slime mold" rot monster-name!
   dup ['] .slime-mold       swap monster-show-addr   !
