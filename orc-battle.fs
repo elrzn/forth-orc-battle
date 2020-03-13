@@ -12,6 +12,7 @@ variable player-strength
 create monsters monster-num cells allot
 
 : randval ( n -- n' ) choose 1+ ;
+: n-input ( -- n )    pad 5 blank pad 5 accept >r 0. pad r> >number 2drop drop ;
 
 struct
   cell%  field monster-health
@@ -183,7 +184,14 @@ create monster-builders ' make-wicked-orc ,
   player-strength ?
   ." ." ;
 
-: pick-monster   ( -- addr ) ;  \ nyi 178
+: pick-monster ( -- addr )
+  recursive
+  cr ." Monster #: "
+  monsters n-input cells + @
+  dup monster-dead? if
+    cr ." That monster is already dead"
+    drop pick-monster
+  then ;
 
 : random-monster ( -- addr )
   recursive
