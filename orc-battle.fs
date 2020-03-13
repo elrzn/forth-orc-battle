@@ -122,7 +122,7 @@ end-struct slime-mold%
   then ;
 
 : make-slime-mold ( -- addr )
-  slime-mold% %allot monster-make-defaults
+  slime-mold% %allot make-monster-defaults
   5 randval over slime-mold-sliminess !
   dup s" Slime mold" rot monster-name!
   dup ['] .slime-mold       swap monster-show-addr   !
@@ -149,7 +149,7 @@ monster% end-struct brigand%
   endcase ;
 
 : make-brigand ( -- addr )
-  brigand% %allot monster-make-defaults
+  brigand% %allot make-monster-defaults
   dup s" Brigand" rot monster-name!
   dup ['] brigand-attack swap monster-attack-addr ! ;
 
