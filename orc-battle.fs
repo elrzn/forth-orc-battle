@@ -84,7 +84,7 @@ end-struct wicked-orc%
 
 monster% end-struct hydra%
 
-: .hydra ( addr -- ) ." A malicious hydra with " monster-health ? ." heads." ;
+: .hydra ( addr -- ) ." A malicious hydra with " monster-health ? ." heads" ;
 
 : hydra-increase-health ( addr -- ) monster-health @ 1 + swap monster-health ! ;
 
@@ -206,7 +206,18 @@ create monster-builders ' make-wicked-orc ,
     make-random-monster monsters i cells + !
   loop ;
 
-: show-monsters ;               \ nyi
+: show-monsters
+  cr ." Your foes: "
+  monster-num 0 do
+    cr i 1 + . ." -> "
+    monsters i cells + @
+    dup monster-dead? if
+      drop ." **dead**"
+    else
+      ." Health = " dup monster-health ? ." " monster-show
+    then
+  loop ;
+
 : monsters-dead? true ;         \ nyi
 : monsters-alive? monsters-dead? not ;
 
