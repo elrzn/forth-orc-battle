@@ -8,6 +8,8 @@ variable player-strength
 : player-decrease-strength ( n -- )      player-health  (player-decrease) ;
 
 12 constant monster-num
+30 constant player-attr-default
+ 4 constant #monster-builders
 
 create monsters monster-num cells allot
 
@@ -161,16 +163,13 @@ create monster-builders ' make-wicked-orc ,
                         ' make-brigand    ,
 
 : init-player
-  30 player-health   !
-  30 player-agility  !
-  30 player-strength ! ;
+  player-attr-default player-health   !
+  player-attr-default player-agility  !
+  player-attr-default player-strength ! ;
 
 : player-dead? ( -- f ) player-health @ 0<= ;
 
-: player-attacks-per-round ( -- n )
-  player-agility @
-  15 /                          \ no need for truncating integer operations
-  1+ ;
+: player-attacks-per-round ( -- n ) player-agility @ 15 / 1+ ;
 
 : .player
   cr
@@ -200,7 +199,7 @@ create monster-builders ' make-wicked-orc ,
     drop random-monster
   then ;
 
-: make-random-monster ( -- addr ) monster-builders 4 choose cells + @ execute ;
+: make-random-monster ( -- addr ) monster-builders #monster-builders choose cells + @ execute ;
 
 : init-monsters
   monster-num 0 do
