@@ -27,10 +27,11 @@ struct
   dcell% field monster-name
 end-struct monster%
 
-: monster-name! ( c-addr u addr -- ) monster-name 2! ;
-: monster-name@ ( addr -- c-addr u ) monster-name 2@ ;
-: monster-dead? ( addr -- f )        monster-health @ 0<= ;
-: .monster-name ( addr -- )          monster-name@ type ;
+: monster-name!  ( c-addr u addr -- ) monster-name 2! ;
+: monster-name@  ( addr -- c-addr u ) monster-name 2@ ;
+: monster-dead?  ( addr -- f )        monster-health @ 0<= ;
+: -monster-dead? ( addr -- f )        monster-dead? not ;
+: .monster-name  ( addr -- )          monster-name@ type ;
 
 : monster-take-damage ( addr n -- )
   over monster-health @
@@ -61,6 +62,16 @@ end-struct monster%
   dup monster-default-hit ;
 
 : make-monster ( -- addr ) monster% %allot make-monster-defaults ;
+
+: monsters-attack
+  monster-num 0 do
+    monsters i cells + @
+    dup monster-dead? if
+      drop
+    else
+      monster-attack
+    then
+  loop ;
 
 monster%
   cell% field wicked-orc-club-level
@@ -220,7 +231,7 @@ create monster-builders ' make-wicked-orc ,
 
 : monsters-dead? ( -- f )
   monster-num 0 do
-    monsters i cells + @ monster-dead? not if
+    monsters i cells + @ -monster-dead? if
       false leave
     then
   loop
@@ -273,8 +284,7 @@ create monster-builders ' make-wicked-orc ,
       player-attack
     then
   loop
-  \ TODO Make monsters attack. Basically need to loop through the array of
-  \ monsters, and if the monster is not dead, then make it attack the player.
+  monsters-attack
   game-loop ;
 
 : .player-dead
