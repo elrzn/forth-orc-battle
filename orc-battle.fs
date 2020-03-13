@@ -218,7 +218,14 @@ create monster-builders ' make-wicked-orc ,
     then
   loop ;
 
-: monsters-dead? true ;         \ nyi
+: monsters-dead? ( -- f )
+  monster-num 0 do
+    monsters i cells + @ monster-dead? not if
+      false leave
+    then
+  loop
+  0= ;
+
 : monsters-alive? monsters-dead? not ;
 
 : player-stab-attack
