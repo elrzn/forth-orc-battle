@@ -1,3 +1,5 @@
+30 constant player-attr-default
+
 variable player-health
 variable player-agility
 variable player-strength
@@ -7,11 +9,8 @@ variable player-strength
 : player-decrease-agility  ( n -- )      player-agility (player-decrease) ;
 : player-decrease-strength ( n -- )      player-health  (player-decrease) ;
 
-12 constant monster-num
-30 constant player-attr-default
- 4 constant #monster-builders
-
-create monsters monster-num cells allot
+12 constant #monsters
+create monsters #monsters cells allot
 
 : randval ( n -- n' ) choose 1+ ;
 : n-input ( -- n )    pad 5 blank pad 5 accept >r 0. pad r> >number 2drop drop ;
@@ -64,7 +63,7 @@ end-struct monster%
 : make-monster ( -- addr ) monster% %allot make-monster-defaults ;
 
 : monsters-attack
-  monster-num 0 do
+  #monsters 0 do
     monsters i cells + @
     dup monster-dead? if
       drop
@@ -168,6 +167,7 @@ monster% end-struct brigand%
   dup ['] brigand-attack swap monster-attack-addr ! ;
 
 \ Keep track of builders to aid random creation of monsters.
+4 constant #monsters-builders
 create monster-builders ' make-wicked-orc ,
                         ' make-hydra      ,
                         ' make-slime-mold ,
@@ -204,21 +204,21 @@ create monster-builders ' make-wicked-orc ,
 
 : random-monster ( -- addr )
   recursive
-  monsters monster-num choose cells + @
+  monsters #monsters choose cells + @
   dup monster-dead? if
     drop random-monster
   then ;
 
-: make-random-monster ( -- addr ) monster-builders #monster-builders choose cells + @ execute ;
+: make-random-monster ( -- addr ) monster-builders #monsters-builders choose cells + @ execute ;
 
 : init-monsters
-  monster-num 0 do
+  #monsters 0 do
     make-random-monster monsters i cells + !
   loop ;
 
 : show-monsters
   cr ." Your foes: "
-  monster-num 0 do
+  #monsters 0 do
     cr i 1 + . ." -> "
     monsters i cells + @
     dup monster-dead? if
@@ -229,7 +229,7 @@ create monster-builders ' make-wicked-orc ,
   loop ;
 
 : monsters-dead? ( -- f )
-  monster-num 0 do
+  #monsters 0 do
     monsters i cells + @ -monster-dead? if
       false leave
     then
