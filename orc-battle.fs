@@ -16,14 +16,15 @@ create monsters #monsters cells allot
 : n-input ( -- n )    pad 5 blank pad 5 accept >r 0. pad r> >number 2drop drop ;
 
 struct
+  dcell% field monster-name
   cell%  field monster-health
-  \ Keep an address of the word that will be used to display the struct. The
-  \ idea is that each constructor shall set its own display function. This can
-  \ be called later on with monster-show.
+  \ Allocate addresses that point to method implementations that may be
+  \ overriden. Another option would have been a single cell holding a virtual
+  \ table but for the amount of methods I'd rather not create another level of
+  \ indirection.
   cell%  field monster-show-addr
   cell%  field monster-attack-addr
   cell%  field monster-hit-addr
-  dcell% field monster-name
 end-struct monster%
 
 : monster-name!  ( c-addr u addr -- ) monster-name 2! ;
