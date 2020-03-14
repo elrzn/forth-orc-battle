@@ -197,7 +197,7 @@ create monster-builders ' make-wicked-orc ,
 : pick-monster ( -- addr )
   recursive
   cr ." Monster #: "
-  monsters n-input cells + @
+  monsters n-input 1 - cells + @
   dup monster-dead? if
     cr ." That monster is already dead"
     drop pick-monster
