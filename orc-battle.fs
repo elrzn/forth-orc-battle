@@ -235,7 +235,7 @@ create monster-builders ' make-wicked-orc ,
       false leave
     then
   loop
-  0= ;
+  0= not ;
 
 : monsters-alive? monsters-dead? not ;
 
