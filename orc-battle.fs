@@ -69,7 +69,7 @@ end-struct monster%
     dup monster-dead? if
       drop
     else
-      monster-attack
+      monster-attack cr
     then
   loop ;
 
@@ -131,7 +131,7 @@ end-struct slime-mold%
   slime-mold-sliminess @ randval
   ." A slime mold wraps around your legs and decreases your agility by " dup . ." !"
   2 choose 0= if
-    ." It also squirts in your face, taking away a health point!"
+    ."  It also squirts in your face, taking away a health point!"
     player-decrease-health
   then ;
 
@@ -183,7 +183,6 @@ create monster-builders ' make-wicked-orc ,
 : player-attacks-per-round ( -- n ) player-agility @ 15 / 1+ ;
 
 : .player
-  cr
   ." You are a valiant knight with a health of "
   \ Note that ? or @ . is printing a space afterwards. Need to figure out how to
   \ circunvent this.
@@ -289,7 +288,7 @@ create monster-builders ' make-wicked-orc ,
 
 : .player-dead
   player-dead? if
-    cr ." You have been killed. Game over." cr
+    ." You have been killed. Game over." cr
   then ;
 
 : .monsters-dead
@@ -298,5 +297,5 @@ create monster-builders ' make-wicked-orc ,
   then ;
 
 : end-game   .player-dead .monsters-dead  ;
-: init-game  init-monsters init-player    ;
+: init-game  cr init-monsters init-player ;
 : orc-battle init-game game-loop end-game ;
