@@ -5,9 +5,9 @@ variable player-agility
 variable player-strength
 
 : (player-decrease)        ( n addr -- ) dup @ rot - swap ! ;
-: player-decrease-health   ( n -- )      player-health  (player-decrease) ;
-: player-decrease-agility  ( n -- )      player-agility (player-decrease) ;
-: player-decrease-strength ( n -- )      player-health  (player-decrease) ;
+: player-decrease-health   ( n -- )      player-health   (player-decrease) ;
+: player-decrease-agility  ( n -- )      player-agility  (player-decrease) ;
+: player-decrease-strength ( n -- )      player-strength (player-decrease) ;
 
 12 constant #monsters
 create monsters #monsters cells allot
